@@ -15,6 +15,7 @@
     .message-group { border-bottom: 1px solid gray; margin: -4px;padding-left: 8px; clear: both }
     .sender { font-weight: bold; }
     .timestamp { margin-top: -12px; }
+    .footer { margin-top: 18px; font-size: 12px; }
     small { font-size: 11px; color: dimgray; }
     strong { font-size: 26px; font-weight:bold; }
 </style>
@@ -27,8 +28,8 @@
 <body>
 <div class="page-title">webOS SimpleChat Log</div>
 <div class="description">
-    This chat is to help legacy webOS (Palm/HP Pre, Touchpad and related devices) stay in touch while the forums are broken.
-    The log contains the last <?php echo $config['maxchatlength'] ?> messages sent, newest on top, and is read-only for now. To join the conversation, install webOS SimpleChat on your device or emulator!
+    This chat is to help legacy webOS (Palm/HP Pre, Touchpad and related devices) stay in touch while the <a href="http://www.webosnation.com">forums</a> are broken.
+    The log contains the last <?php echo $config['maxchatlength'] ?> messages sent, newest on top, and is read-only for now. To join the conversation, <a href="http://appcatalog.webosarchive.com/showMuseumDetails.php?category=Revisionist+History&count=12&app=1005777">install webOS SimpleChat</a> on your device or emulator!
 </div>
 <div class="message-area">
 <?php
@@ -60,5 +61,6 @@ function get_function_endpoint($functionName) {
 }
 ?>
 </div>
+<div class='footer'>Provided by <a href="http://www.webosarchive.com">webOS Archive</a> | Copyright 2021 <a href="http://www.jonandnic.com">Jon Wise</a> | Open Source with a MIT License: <a href="https://github.com/codepoet80/simplechat-service">Git Repo</a></footer>
 </body>
 </html>
