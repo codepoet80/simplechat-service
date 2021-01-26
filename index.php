@@ -28,7 +28,7 @@
 <body>
 <div class="page-title">webOS SimpleChat Log</div>
 <div class="description">
-    This chat is to help legacy webOS (Palm/HP Pre, Touchpad and related devices) stay in touch while the <a href="http://www.webosnation.com">forums</a> are broken.
+    This chat is to help legacy webOS (Palm/HP Pre, Touchpad and related devices) stay in touch as a back-up to the <a href="http://www.webosnation.com">forums</a>.
     The log contains the last <?php echo $config['maxchatlength'] ?> messages sent, newest on top, and is read-only for now. To join the conversation, <a href="http://appcatalog.webosarchive.com/showMuseumDetails.php?category=Revisionist+History&count=12&app=1005777">install webOS SimpleChat</a> on your device or emulator!
 </div>
 <div class="message-area">
