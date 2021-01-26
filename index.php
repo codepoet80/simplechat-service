@@ -25,6 +25,9 @@
 <link rel="icon" href="icon.png" type="image/png">
 <meta http-equiv="Pragma" content="no-cache">
 </head>
+<script>
+    setTimeout("location.reload(true);", 180000);
+</script>
 <body>
 <div class="page-title">webOS SimpleChat Log</div>
 <div class="description">
