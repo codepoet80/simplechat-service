@@ -10,12 +10,12 @@
     a:hover { text-decoration: underline; color:rgb(62,11,249); }
     .page-title { font-size: 28px; padding-bottom: 18px; display: flex; align-items: center;}
     .page-title::before { content: url('icon.png'); margin-right: 18px; }
-    .description { float:right; text-align: right; maring-bottom: 18px; margin-right: 2%; max-width: 80%; font-size: 14px; font-style: italic; color: dimgray;}
-    .message-area { clear: both; padding-top: 18px; }
-    .message-group { border-bottom: 1px solid gray; margin: -4px;padding-left: 8px; clear: both }
+    .description { float:right; text-align: right;  margin-right: 2%; max-width: 80%; font-size: 14px; font-style: italic; color: dimgray;}
+    .message-area { clear: both; padding-top: 20px; }
+    .message-group { border-bottom: 1px solid gray; margin: -4px; padding-left: 8px; clear: both }
     .sender { font-weight: bold; }
     .timestamp { margin-top: -12px; }
-    .footer { margin-top: 18px; font-size: 12px; }
+    .footer { margin-top: 18px; font-size: 12px; color: dimgray;}
     small { font-size: 11px; color: dimgray; }
     strong { font-size: 26px; font-weight:bold; }
 </style>
