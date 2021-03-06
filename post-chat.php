@@ -86,7 +86,7 @@ else {
 }
 
 if (!$written) {
-    die ("{\"error\":\"failed to write to file\"}");
+    die ("{\"error\":\"failed to write to chat file\"}");
 } 
 
 echo "{\"posted\":\"" . $newid . "\", \"senderKey\":\"" . $senderKey . "\"}";

@@ -39,8 +39,8 @@
 $url = get_function_endpoint('') . "get-chat.php";
 
 $json = file_get_contents($url);
-$chatdata = json_decode($json);
-$chats = $chatdata->messages;
+$chatData = json_decode($json);
+$chats = $chatData->messages;
 $chats = array_reverse($chats);
 foreach ($chats as $chat) {
     echo "<div class='message-group'>";
