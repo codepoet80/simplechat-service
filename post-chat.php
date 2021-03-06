@@ -45,7 +45,7 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
 
     //assign ids (one public, one for the sender only)
     $newid = uniqid();
-    $senderkey = uniqid();
+    $senderKey = uniqid();
 
     //calculate time stamp
     $now = new DateTime("now", new DateTimeZone("UTC"));
@@ -54,7 +54,7 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     //cleanse and prep incoming data
     $newpost = new stdClass();
     $newpost->uid = $newid;
-    $newpost->senderKey = $senderkey;
+    $newpost->senderKey = $senderKey;
     $newpost->sender = strip_tags($postdata->sender, $config['allowedhtml']);
     $newpost->message = strip_tags($postdata->message, $config['allowedhtml']);
     $newpost->timestamp = $now;
@@ -89,6 +89,6 @@ if (!$written) {
     die ("{\"error\":\"failed to write to file\"}");
 } 
 
-echo "{\"posted\":\"" . $newid . "\", \"senderkey\":\"" . $senderkey . "\"}";
+echo "{\"posted\":\"" . $newid . "\", \"senderKey\":\"" . $senderKey . "\"}";
 exit();
 ?>
