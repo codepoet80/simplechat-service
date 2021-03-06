@@ -3,6 +3,7 @@ $config = include('config.php');
 header('Content-Type: application/json');
 
 $file = "data/chatlog.json";
+$numLikes = 0;
 
 //Make sure the chat file exists and can be loaded
 if (!file_exists($file)){
@@ -56,6 +57,7 @@ if (isset($postdata->uid) && $postdata->uid != "" && isset($postdata->like) && $
                 if ($postdata->like == "+1")
                     $chat->likes = 1;
             }
+            $numLikes = $chat->likes;
             $found = true;
         }
     }
@@ -78,7 +80,7 @@ if (!$written) {
 if (!$found) {
     echo "{\"warning\":\"message with uid " . $postdata->uid . " not found to like\"}";
 } else {
-    echo "{\"liked\":\"" . $postdata->uid . "\"}";
+    echo "{\"liked\":\"" . $postdata->uid . "\", \"likes\":\"" . $numLikes . "\"}";
 }
 exit();
 ?>
