@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 $file = "data/chatlog.json";
 $numLikes = 0;
+$found = false;
 
 //Make sure the chat file exists and can be loaded
 if (!file_exists($file)){
@@ -43,8 +44,9 @@ if (isset($postdata->uid) && $postdata->uid != "" && isset($postdata->like) && $
 
     foreach($chatData->messages as $chat)
     {
-        $found = false;
-        if ($chat->uid == $postdata->uid) {
+        if ($chat->uid === $postdata->uid) {
+            echo "found!";
+            $found = true;
             if ($chat->likes) {
                 if ($postdata->like == "+1") {
                     $chat->likes++;
@@ -58,7 +60,7 @@ if (isset($postdata->uid) && $postdata->uid != "" && isset($postdata->like) && $
                     $chat->likes = 1;
             }
             $numLikes = $chat->likes;
-            $found = true;
+            
         }
     }
     try {
@@ -77,7 +79,7 @@ if (!$written) {
     die ("{\"error\":\"failed to write to chat file\"}");
 } 
 
-if (!$found) {
+if ($found == false) {
     echo "{\"warning\":\"message with uid " . $postdata->uid . " not found to like\"}";
 } else {
     echo "{\"liked\":\"" . $postdata->uid . "\", \"likes\":\"" . $numLikes . "\"}";

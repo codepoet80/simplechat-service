@@ -47,6 +47,8 @@ function convert_message_to_public_schema($data) {
     $msg->sender = $data['sender'];
     $msg->message = $data['message'];
     $msg->timestamp = $data['timestamp'];
+    $msg->likes = $data['likes'];
+    $msg->edited = $data['edited'];
     return $msg;
 }
 ?>
