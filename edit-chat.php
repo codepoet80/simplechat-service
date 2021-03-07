@@ -1,7 +1,7 @@
 <?php
 $config = include('config.php');
 header('Content-Type: application/json');
-
+$found = false;
 $file = "data/chatlog.json";
 
 //Make sure the chat file exists and can be loaded
@@ -42,7 +42,6 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
 
     foreach($chatData->messages as $chat)
     {
-        $found = false;
         if ($chat->uid == $postdata->uid) {
             if ($chat->senderKey === $postdata->editKey && $chat->sender === $postdata->sender) {
                 $chat->message = strip_tags($postdata->message, $config['allowedhtml']);
