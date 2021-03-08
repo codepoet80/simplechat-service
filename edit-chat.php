@@ -44,6 +44,10 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     {
         if ($chat->uid == $postdata->uid) {
             if ($chat->senderKey === $postdata->editKey && $chat->sender === $postdata->sender) {
+		//handle special webOS emoticons
+		$postdata->message = str_replace("<3", "&lt;3", $postdata->message);
+		$postdata->message = str_replace(">:-)", "&gt;:-)", $postdata->message);
+		$postdata->message = str_replace(">:(", "&gt;:(", $postdata->message);
                 $chat->message = strip_tags($postdata->message, $config['allowedhtml']);
                 //calculate time stamp
                 $now = new DateTime("now", new DateTimeZone("UTC"));

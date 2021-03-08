@@ -56,6 +56,10 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     $newpost->uid = $newid;
     $newpost->senderKey = $senderKey;
     $newpost->sender = strip_tags($postdata->sender, $config['allowedhtml']);
+    //handle special webOS emoticons
+    $postdata->message = str_replace("<3", "&lt;3", $postdata->message);
+    $postdata->message = str_replace(">:-)", "&gt;:-)", $postdata->message);
+    $postdata->message = str_replace(">:(", "&gt;:(", $postdata->message);
     $newpost->message = strip_tags($postdata->message, $config['allowedhtml']);
     $newpost->timestamp = $now;
 
