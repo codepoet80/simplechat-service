@@ -6,8 +6,8 @@
 <title>webOS SimpleChat Log</title>
 <style>
     * { font-family:arial;}
-    a { text-decoration: none; color:rgb(62,11,249); }
-    a:hover { text-decoration: underline; color:rgb(62,11,249); }
+    a { text-decoration: none; color:rgb(117,43,177); }
+    a:hover { text-decoration: underline; color:rgb(117,43,177); }
     .page-title { font-size: 28px; padding-bottom: 18px; display: flex; align-items: center;}
     .page-title::before { content: url('icon.png'); margin-right: 18px; }
     .description { float:right; text-align: right;  margin-right: 2%; max-width: 80%; font-size: 14px; font-style: italic; color: dimgray;}
