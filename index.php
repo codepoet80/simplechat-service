@@ -1,5 +1,6 @@
 <?php
     $config = include('config.php');
+    include('lib/emoji.php');
 ?>
 <html>
 <head>
@@ -21,6 +22,7 @@
 </style>
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="stylesheet" href="style.css">
+<link href="lib/emoji.css?cb=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1" />
 <link rel="icon" href="icon.png" type="image/png">
 <meta http-equiv="Pragma" content="no-cache">
@@ -45,7 +47,7 @@ $chats = array_reverse($chats);
 foreach ($chats as $chat) {
     echo "<div class='message-group'>";
     echo "  <p><span class='sender'>". $chat->sender . ": </span>";
-    echo "  <span class='message'>". $chat->message . "</span</p>";
+    echo "  <span class='message'>". emoji_unified_to_html($chat->message) . "</span</p>";
     echo "  <p class='timestamp'><small>" . $chat->timestamp . " UTC</small></p>";
     echo "</div>";
 }
