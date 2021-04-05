@@ -1,0 +1,5 @@
+{
+	"webPort": 8001,
+	"discordAppId": "Get this from your App Registration in Dicord",
+	"simpleChatDataFile": "/var/www/chat/data/chatlog.json"
+}

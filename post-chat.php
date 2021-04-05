@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 $file = "data/chatlog.json";
 $template = "chatlog-template.json";
+$bothook = "http://localhost:8001/";
 
 //Make sure the chat file exists and can be loaded
 if (!file_exists($file)){
@@ -57,10 +58,11 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     $newpost->senderKey = $senderKey;
     $newpost->sender = strip_tags($postdata->sender, $config['allowedhtml']);
     //handle special webOS emoticons
-    $postdata->message = str_replace("<3", "&lt;3", $postdata->message);
-    $postdata->message = str_replace(">:-)", "&gt;:-)", $postdata->message);
-    $postdata->message = str_replace(">:(", "&gt;:(", $postdata->message);
-    $newpost->message = strip_tags($postdata->message, $config['allowedhtml']);
+    $newpost->message = $postdata->message;
+    $newpost->message = str_replace("<3", "&lt;3", $postdata->message);
+    $newpost->message = str_replace(">:-)", "&gt;:-)", $postdata->message);
+    $newpost->message = str_replace(">:(", "&gt;:(", $postdata->message);
+    $newpost->message = strip_tags($newpost->message, $config['allowedhtml']);
     $newpost->timestamp = $now;
 
     //load existing chat data
@@ -84,6 +86,9 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
         die ("{\"error\":\"chat content could not be updated: " . $e->getMessage . "\"}");
     }
     $written = file_put_contents($file, $newChatData);
+
+    //Copy to Discord
+    $discordpost = botmsg($postdata->message, $newpost->sender, $newpost->uid, $bothook."post");
 }
 else {
     die ("{\"error\":\"incomplete chat payload\"}");
@@ -91,8 +96,28 @@ else {
 
 if (!$written) {
     die ("{\"error\":\"failed to write to chat file\"}");
-} 
+}
 
-echo "{\"posted\":\"" . $newid . "\", \"senderKey\":\"" . $senderKey . "\"}";
+echo "{\"posted\":\"" . $newid . "\", \"senderKey\":\"" . $senderKey . "\", \"discordResponse\":\"". $discordresponse ."\"}";
+
 exit();
+
+function botmsg($message, $user, $uid, $endpoint) {
+	if ($endpoint != "") {
+   	    $ch = curl_init($endpoint);
+	    $data = array('username'=>$user, 'content'=>$message, 'uid'=>$uid);
+
+	    if(isset($ch)) {
+     		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+      		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+      		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      		$result = curl_exec($ch);
+      		curl_close($ch);
+      		return $result;
+    	    }
+
+	}
+}
+
 ?>

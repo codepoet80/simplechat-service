@@ -3,6 +3,7 @@ $config = include('config.php');
 header('Content-Type: application/json');
 
 $file = "data/chatlog.json";
+$bothook = "http://localhost:8001/";
 $numLikes = 0;
 $found = false;
 
@@ -45,8 +46,9 @@ if (isset($postdata->uid) && $postdata->uid != "" && isset($postdata->like) && $
     foreach($chatData->messages as $chat)
     {
         if ($chat->uid === $postdata->uid) {
-            echo "found!";
+            //echo "found!";
             $found = true;
+	    $postdata->message = $chat->message;
             if ($chat->likes) {
                 if ($postdata->like == "+1") {
                     $chat->likes++;
@@ -60,12 +62,14 @@ if (isset($postdata->uid) && $postdata->uid != "" && isset($postdata->like) && $
                     $chat->likes = 1;
             }
             $numLikes = $chat->likes;
-            
         }
     }
     try {
         $newChatData = json_encode($chatData, JSON_PRETTY_PRINT);
         $written = file_put_contents($file, $newChatData);
+
+	//Copy to Discord
+	$discordpost = botmsg($postdata->uid, $postdata->message, $postdata->discordId, $bothook."like");
     }
     catch (exception $e) {
         die ("{\"error\":\"chat content could not be updated: " . $e->getMessage . "\"}");
@@ -77,7 +81,7 @@ else {
 
 if (!$written) {
     die ("{\"error\":\"failed to write to chat file\"}");
-} 
+}
 
 if ($found == false) {
     echo "{\"warning\":\"message with uid " . $postdata->uid . " not found to like\"}";
@@ -85,4 +89,22 @@ if ($found == false) {
     echo "{\"liked\":\"" . $postdata->uid . "\", \"likes\":\"" . $numLikes . "\"}";
 }
 exit();
+
+function botmsg($messageid, $messagecontent, $discordId, $endpoint) {
+        if ($endpoint != "") {
+            $ch = curl_init($endpoint);
+            $data = array('uid'=>$messageid, 'content'=>$messagecontent, 'discordId'=>$discordId);
+
+            if(isset($ch)) {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                return $result;
+            }
+
+        }
+}
 ?>

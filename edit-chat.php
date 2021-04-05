@@ -3,6 +3,7 @@ $config = include('config.php');
 header('Content-Type: application/json');
 $found = false;
 $file = "data/chatlog.json";
+$bothook = "http://localhost:8001/";
 
 //Make sure the chat file exists and can be loaded
 if (!file_exists($file)){
@@ -44,11 +45,13 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     {
         if ($chat->uid == $postdata->uid) {
             if ($chat->senderKey === $postdata->editKey && $chat->sender === $postdata->sender) {
+		$postdata->oldmessage = $chat->message;
 		//handle special webOS emoticons
 		$postdata->message = str_replace("<3", "&lt;3", $postdata->message);
 		$postdata->message = str_replace(">:-)", "&gt;:-)", $postdata->message);
 		$postdata->message = str_replace(">:(", "&gt;:(", $postdata->message);
-                $chat->message = strip_tags($postdata->message, $config['allowedhtml']);
+		$postdata->message = strip_tags($postdata->message, $config['allowedhtml']);
+		$chat->message = $postdata->message;
                 //calculate time stamp
                 $now = new DateTime("now", new DateTimeZone("UTC"));
                 $now = $now->format('Y-m-d H:i:s');
@@ -63,6 +66,9 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     try {
         $newChatData = json_encode($chatData, JSON_PRETTY_PRINT);
         $written = file_put_contents($file, $newChatData);
+
+	//Copy to Discord
+	$discordpost = botmsg($postdata->uid, $postdata->oldmessage ,$postdata->message, $postdata->discordId, $bothook."edit");
     }
     catch (exception $e) {
         die ("{\"error\":\"chat content could not be updated: " . $e->getMessage . "\"}");
@@ -74,7 +80,7 @@ else {
 
 if (!$written) {
     die ("{\"error\":\"failed to write to chat file\"}");
-} 
+}
 
 if (!$found) {
     echo "{\"warning\":\"message with uid " . $postdata->uid . " not found to edit\"}";
@@ -82,4 +88,23 @@ if (!$found) {
     echo "{\"edited\":\"" . $postdata->uid . "\"}";
 }
 exit();
+
+function botmsg($messageid, $oldcontent, $newcontent, $discordId, $endpoint) {
+        if ($endpoint != "") {
+            $ch = curl_init($endpoint);
+            $data = array('uid'=>$messageid, 'oldcontent'=>$oldcontent, 'newcontent'=>$newcontent, 'discordId'=>$discordId);
+
+            if(isset($ch)) {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                return $result;
+            }
+
+        }
+}
+
 ?>

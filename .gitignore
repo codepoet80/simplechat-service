@@ -1,3 +1,5 @@
 config.php
+discord/config.json
+discord/node_modules
 data/chatlog.json
 .htaccess
