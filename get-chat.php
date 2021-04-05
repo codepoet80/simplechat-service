@@ -1,5 +1,6 @@
 <?php
 $config = include('config.php');
+include('lib/emoji.php');
 header('Content-Type: application/json');
 
 $file = "data/chatlog.json";
@@ -45,7 +46,7 @@ function convert_message_to_public_schema($data) {
     $msg = new messagedata();
     $msg->uid = $data['uid'];
     $msg->sender = $data['sender'];
-    $msg->message = $data['message'];
+    $msg->message = emoji_unified_to_html($data['message']);
     $msg->timestamp = $data['timestamp'];
     $msg->likes = $data['likes'];
     $msg->edited = $data['edited'];
