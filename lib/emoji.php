@@ -9964,7 +9964,7 @@
 		return preg_replace_callback($GLOBALS['emoji_maps']['unified_rx'], function($m){
 			if (isset($m[2]) && $m[2] == "\xEF\xB8\x8E") return $m[0];
 			$cp = $GLOBALS['emoji_maps']['unified_to_html'][$m[1]];
-			return "<span class=\"emoji-outer emoji-sizer\"><span class=\"emoji-inner emoji{$cp}\"></span></span>";
+			return "<span name=\"emoji\" class=\"emoji-outer emoji-sizer\"><span class=\"emoji-inner emoji{$cp}\"></span></span>";
 		}, $text);
 	}
 
