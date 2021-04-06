@@ -47,11 +47,13 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
             if ($chat->senderKey === $postdata->editKey && $chat->sender === $postdata->sender) {
 		$postdata->oldmessage = $chat->message;
 		//handle special webOS emoticons
+		$chat->sender = strip_tags($chat->sender, $config['allowedhtml']);
 		$postdata->message = str_replace("<3", "&lt;3", $postdata->message);
 		$postdata->message = str_replace(">:-)", "&gt;:-)", $postdata->message);
 		$postdata->message = str_replace(">:(", "&gt;:(", $postdata->message);
 		$postdata->message = strip_tags($postdata->message, $config['allowedhtml']);
 		$chat->message = $postdata->message;
+		$postdata->discordId = $chat->discordId;
                 //calculate time stamp
                 $now = new DateTime("now", new DateTimeZone("UTC"));
                 $now = $now->format('Y-m-d H:i:s');
@@ -68,7 +70,7 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
         $written = file_put_contents($file, $newChatData);
 
 	//Copy to Discord
-	$discordpost = botmsg($postdata->uid, $postdata->oldmessage ,$postdata->message, $postdata->discordId, $bothook."edit");
+	$discordpost = botmsg($postdata->uid, $chat->sender, $postdata->oldmessage ,$postdata->message, $postdata->discordId, $bothook."edit");
     }
     catch (exception $e) {
         die ("{\"error\":\"chat content could not be updated: " . $e->getMessage . "\"}");
@@ -89,10 +91,10 @@ if (!$found) {
 }
 exit();
 
-function botmsg($messageid, $oldcontent, $newcontent, $discordId, $endpoint) {
+function botmsg($messageid, $sender, $oldcontent, $newcontent, $discordId, $endpoint) {
         if ($endpoint != "") {
             $ch = curl_init($endpoint);
-            $data = array('uid'=>$messageid, 'oldcontent'=>$oldcontent, 'newcontent'=>$newcontent, 'discordId'=>$discordId);
+            $data = array('uid'=>$messageid, 'sender'=>$sender, 'oldcontent'=>$oldcontent, 'newcontent'=>$newcontent, 'discordId'=>$discordId);
 
             if(isset($ch)) {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");

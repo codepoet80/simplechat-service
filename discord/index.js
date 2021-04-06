@@ -48,6 +48,7 @@ webapp.post('/like', async function (req, res) {
 webapp.post('/edit', async function (req, res) {
 	console.log("edit request was: " + JSON.stringify(req.body));
 	var messageId = req.body.uid;
+	var sender = req.body.sender;
 	var newContent = convertEmoticons(req.body.newcontent);
 	var oldContent = req.body.oldcontent;
 	var discordId = req.body.discordId;
@@ -55,9 +56,8 @@ webapp.post('/edit', async function (req, res) {
 	var channel = client.channels.cache.get(listenChannel);
 	var findMsg = await findMessage(messageId, oldContent);
 	if (findMsg) {
-		console.log("I should edit: " + findMsg);
 		var editMsg = await channel.messages.fetch(findMsg);
-		editMsg.edit(newContent);
+		editMsg.edit("**" + sender + "**: " + newContent);
 	}
 
 });
