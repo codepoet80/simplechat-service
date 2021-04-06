@@ -36,7 +36,7 @@ webapp.post('/like', async function (req, res) {
 	var discordId = req.body.discordId;
 	res.end("{'status':'ok'}")
 	var channel = client.channels.cache.get(listenChannel);
-	var findMsg = await findMessage(messageId, messageContent);
+	var findMsg = await findMessage(messageId, messageContent, discordId);
 
 	if (findMsg) {
 		var reactMsg = await channel.messages.fetch(findMsg);
@@ -54,7 +54,7 @@ webapp.post('/edit', async function (req, res) {
 	var discordId = req.body.discordId;
 	res.end("{'status':'ok'}")
 	var channel = client.channels.cache.get(listenChannel);
-	var findMsg = await findMessage(messageId, oldContent);
+	var findMsg = await findMessage(messageId, oldContent, discordId);
 	if (findMsg) {
 		var editMsg = await channel.messages.fetch(findMsg);
 		editMsg.edit("**" + sender + "**: " + newContent);

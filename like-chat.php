@@ -62,6 +62,7 @@ if (isset($postdata->uid) && $postdata->uid != "" && isset($postdata->like) && $
                     $chat->likes = 1;
             }
             $numLikes = $chat->likes;
+	    $postdata->discordId = $chat->discordId;
         }
     }
     try {
