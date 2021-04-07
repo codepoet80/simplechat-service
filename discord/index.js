@@ -36,7 +36,7 @@ webapp.post('/like', async function (req, res) {
 	var discordId = req.body.discordId;
 	res.end("{'status':'ok'}")
 	var channel = client.channels.cache.get(listenChannel);
-	var findMsg = await findMessage(messageId, messageContent, discordId);
+	var findMsg = await findMessage(messageId, discordId);
 
 	if (findMsg) {
 		var reactMsg = await channel.messages.fetch(findMsg);
@@ -54,7 +54,7 @@ webapp.post('/edit', async function (req, res) {
 	var discordId = req.body.discordId;
 	res.end("{'status':'ok'}")
 	var channel = client.channels.cache.get(listenChannel);
-	var findMsg = await findMessage(messageId, oldContent, discordId);
+	var findMsg = await findMessage(messageId, discordId);
 	if (findMsg) {
 		var editMsg = await channel.messages.fetch(findMsg);
 		editMsg.edit("**" + sender + "**: " + newContent);
@@ -68,16 +68,13 @@ var server = webapp.listen(webPort, function() {
 	console.log("🤖 Listening for messages to send to Discord at http://%s:%s", host, port);
 });
 
-var findMessage = async function(messageId, messageContent, discordId) {
-	console.log("looking for message: " + messageId + "/" + discordId + ": " + messageContent);
+var findMessage = async function(messageId, discordId) {
+	console.log("looking for message: " + messageId + "/" + discordId);
 	var channel = client.channels.cache.get(listenChannel);
         var findMsg = await channel.messages.fetch({limit: 100}).then(messages => {
                 for (message of messages) {
                         var checkMessage = message[1];
-                        var checkMsgContent = message[1].cleanContent;
-                        checkMsgContent = checkMsgContent.split("**: ");
-                        checkMsgContent = checkMsgContent[checkMsgContent.length - 1];
-                        if (checkMessage.id == messageId || checkMessage.id == discordId || checkMsgContent == messageContent) {
+                        if (checkMessage.id == messageId || checkMessage.id == discordId) {
 				console.log("Found matching message in Discord: " + checkMessage.id);
                                 return checkMessage.id;
                         }
@@ -101,22 +98,14 @@ client.on('message', msg => {
 
 client.on('messageReactionAdd', (reaction, user) => {
   console.log("a reaction happened on: " + reaction.message + " user was bot: " + user.bot);
-  if (!user.bot && true == true) {
-    //get rest of message
-    var channel = client.channels.cache.get(listenChannel);
-    channel.messages.fetch({around: reaction.messageID, limit: 1}).then(discordMessages => {
-    	var discordMsg = discordMessages.first();
-    	discordMsg = discordMsg.cleanContent;
-    	discordMsg = discordMsg.split("**: ");
-    	discordMsg = discordMsg[discordMsg.length - 1];
-
+  if (!user.bot) {
         fs.exists(dataFile, (exists) => {
 	  fs.readFile(dataFile, function(err, data) {
 		if (data) {
 			var json = JSON.parse(data);
 			if (json) {
 				for (var m=0;m<json.messages.length;m++) {
-					if (json.messages[m].uid == reaction.message || json.messages[m].message == discordMsg) {
+					if (json.messages[m].uid == reaction.message || json.messages[m].discordId == reaction.message) {
 						console.log("found chatlog message to like!");
 						if (!json.messages[m].likes)
 							json.messages[m].likes = 1;
@@ -129,31 +118,32 @@ client.on('messageReactionAdd', (reaction, user) => {
 		}
 	  });
        });
-     });
    }
 });
 
 client.on('messageUpdate', (oldMsg, newMsg) => {
-    console.log("an edit happened on: " + oldMsg.id);
-    discordMsg = oldMsg.cleanContent;
+    console.log("an edit happened on: " + oldMsg + ", user was bot: " + newMsg.author.bot);
+    var discordMsg = newMsg.cleanContent;
     discordMsg = discordMsg.split("**: ");
-    discordMsg = discordMsg[discordMsg.length - 1];
+    discordMsg = discordMsg[discordMsg.length-1];
 
-    fs.exists(dataFile, (exists) => {
+    if (!newMsg.author.bot) {
+      fs.exists(dataFile, (exists) => {
 	  fs.readFile(dataFile, function(err, data) {
 		if (data) {
 			var json = JSON.parse(data);
 			if (json) {
 				for (var m=0;m<json.messages.length;m++) {
-					if (json.messages[m].uid == oldMsg.id || json.messages[m].message == discordMsg) {
-						json.messages[m].message = convertEmojis(newMsg.cleanContent);
+					if (json.messages[m].uid == oldMsg.id || json.messages[m].discordId == oldMsg.id) {
+						json.messages[m].message = convertEmojis(discordMsg);
 					}
 				}
 				fs.writeFile(dataFile, JSON.stringify(json, null, 4));
 			}
 		}
 	  });
-     });
+      });
+    }
 });
 
 client.login(appId);
