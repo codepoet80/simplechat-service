@@ -39,7 +39,7 @@ webapp.post('/like', async function(req, res) {
 
     if (findMsg) {
         var reactMsg = await channel.messages.fetch(findMsg);
-        reactMsg.react('828100281295831041'); //heart emoji
+        reactMsg.react('❤'); //heart emoji
     }
 
 });
