@@ -196,37 +196,19 @@ function discordIDToSimpleChat(uid, did) {
 function convertEmoticons(message) {
     for (var e = 0; e < emojiTranslate.length; e++) {
         if (message.indexOf(emojiTranslate[e].webOS) != -1) {
-            var useEmoji = emojiTranslate[e].emoji;
-            message = message.replace(emojiTranslate[e].webOS, useEmoji);
+            message = message.replace(emojiTranslate[e].webOS, emojiTranslate[e].emoji);
         }
     }
     return message;
 }
 
 function convertEmojis(message) {
-    //Handle custom Emojis
-    var emojis = message.match(/<.*?>/gs);
-    if (emojis) {
-        console.log("Detected emojis: " + emojis);
-        for (var e = 0; e < emojis.length; e++) {
-            newEmoji = emojis[e];
-            message = message.replace(emojis[e], newEmoji);
-            emojis[e] = newEmoji;
-        }
-        for (var e = 0; e < emojis.length; e++) {
-            message = message.replace(emojis[e], discordToWebOSEmoji(emojis[e]));
+    for (var e = 0; e < emojiTranslate.length; e++) {
+        if (message.indexOf(emojiTranslate[e].webOS) != -1) {
+            message = message.replace(emojiTranslate[e].emoji, emojiTranslate[e].webOS);
         }
     }
     return message;
-}
-
-function discordToWebOSEmoji(emoji) {
-    for (var i = 0; i < emojiTranslate.length; i++) {
-        if (emojiTranslate[i].emoji == emoji) {
-            return emojiTranslate[i].webOS;
-        }
-    }
-    return "[?]";
 }
 
 function formatDateTime(currentDateTime) {
