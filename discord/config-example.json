@@ -1,5 +1,6 @@
 {
-	"webPort": 8001,
-	"discordAppId": "Get this from your App Registration in Dicord",
-	"simpleChatDataFile": "/var/www/chat/data/chatlog.json"
+    "webPort": 8001,
+    "discordAppId": "Get this from your App Registration in Dicord",
+    "discordChannelId": "You basically have to watch incoming messages to find the channel ID you want",
+    "simpleChatDataFile": "/var/www/chat/data/chatlog.json"
 }

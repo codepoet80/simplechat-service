@@ -12,8 +12,7 @@ var webPort = config.webPort;
 const Discord = require('discord.js');
 const client = new Discord.Client();
 var appId = config.discordAppId;
-
-var listenChannel = "828052451164684319"; //prod channel
+var listenChannel = config.discordChannelId;
 
 //Web server
 webapp.post('/post', function(req, res) {
@@ -90,10 +89,32 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     console.log(msg.id + " is a new message from: " + msg.author + ", in channel:" + msg.channel);
-    if (msg.channel == listenChannel)
-        postToSimpleChat(msg);
-    else
-        console.log("not posting message");
+    if (msg.channel == listenChannel) {
+        var user = new Discord.User(client, msg.author);
+        if (!user.bot && !user.system) {
+            console.log("posting to simplechat file");
+            var newMessage = {
+                "uid": msg.id,
+                "senderKey": msg.nonce,
+                "sender": user.username,
+                "message": convertEmojis(msg.cleanContent),
+                "timestamp": formatDateTime(msg.createdAt),
+                "postedFrom": "discord",
+                "discordId": msg.id
+            }
+            console.log("Posting: " + JSON.stringify(newMessage));
+
+            fs.readFile(dataFile, function(err, data) {
+                if (data) {
+                    var json = JSON.parse(data);
+                    if (json) {
+                        json.messages.push(newMessage);
+                        fs.writeFile(dataFile, JSON.stringify(json, null, 4));
+                    }
+                }
+            });
+        }
+    }
 });
 
 client.on('messageReactionAdd', (reaction, user) => {
@@ -149,33 +170,6 @@ client.on('messageUpdate', (oldMsg, newMsg) => {
 client.login(appId);
 
 //Helper functions
-
-function postToSimpleChat(msg) {
-    var user = new Discord.User(client, msg.author);
-    if (!user.bot && !user.system) {
-        console.log("posting to simplechat file");
-        var newMessage = {
-            "uid": msg.id,
-            "senderKey": msg.nonce,
-            "sender": user.username,
-            "message": convertEmojis(msg.cleanContent),
-            "timestamp": formatDateTime(msg.createdAt),
-            "postedFrom": "discord",
-            "discordId": msg.id
-        }
-        console.log("Posting: " + JSON.stringify(newMessage));
-
-        fs.readFile(dataFile, function(err, data) {
-            if (data) {
-                var json = JSON.parse(data);
-                if (json) {
-                    json.messages.push(newMessage);
-                    fs.writeFile(dataFile, JSON.stringify(json, null, 4));
-                }
-            }
-        });
-    }
-}
 
 function discordIDToSimpleChat(uid, did) {
     console.log("append discordid " + did + " to simplechat uid: " + uid);
