@@ -205,6 +205,36 @@ function convertEmoticons(message) {
 }
 
 function convertEmojis(message) {
+	//Handle standard Emojis
+        message = message.replace(/🙂/g, ":)");
+	message = message.replace(/😉/g, ";)");
+	message = message.replace(/😛/g, ":P)");
+	message = message.replace(/😐/g, "|)");
+	message = message.replace(/😉/g, ";)");
+	message = message.replace(/🙁/g, ":(");
+	message = message.replace(/😕/g, ":/");
+	message = message.replace(/😀/g, ":D");
+	message = message.replace(/😃/g, ":D");
+	message = message.replace(/😄/g, ":D");
+	message = message.replace(/😁/g, ":D");
+	message = message.replace(/❤/g, "<3");
+	message = message.replace(/😇/g, "O:)");
+	message = message.replace(/😈/g, ">:-)");
+	message = message.replace(/😮/g, ":O");
+	message = message.replace(/😜/g, "o_O")
+	message = message.replace(/🤢/g, ":@");
+	message = message.replace(/😵/g, "X(");
+	message = message.replace(/😧/, ":-|");
+	message = message.replace(/😨/g, ":-|");
+	message = message.replace(/😦/g, ":-|");
+	message = message.replace(/☹/g, ":[");
+	message = message.replace(/😢/g,":'(");
+	message = message.replace(/😭/g, ":'(")
+	message = message.replace(/😡/g,">:(");
+	message = message.replace(/😠/g, ">:(");
+	message = message.replace(/😎/g, "B-)");
+
+	//Handle custom Emojis
 	var emojis = message.match(/<.*?>/gs);
 		if (emojis) {
 		console.log("Detected emojis: " + emojis);
