@@ -204,7 +204,7 @@ function convertEmoticons(message) {
 
 function convertEmojis(message) {
     for (var e = 0; e < emojiTranslate.length; e++) {
-        if (message.indexOf(emojiTranslate[e].webOS) != -1) {
+        if (message.indexOf(emojiTranslate[e].emoji) != -1) {
             message = message.replace(emojiTranslate[e].emoji, emojiTranslate[e].webOS);
         }
     }
