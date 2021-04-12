@@ -109,7 +109,10 @@ client.on('message', msg => {
                     var json = JSON.parse(data);
                     if (json) {
                         json.messages.push(newMessage);
+			while (json.messages.length > config.maxChatLength)
+				json.messages.shift();
                         fs.writeFile(dataFile, JSON.stringify(json, null, 4));
+			console.log("Chat log has " + json.messages.length + " messages.");
                     }
                 }
             });
