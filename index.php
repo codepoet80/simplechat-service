@@ -10,8 +10,8 @@
 <title><?php echo $config['title']?></title>
 <style>
     * { font-family:arial;}
-    a { text-decoration: none; color:rgb(117,43,177); }
-    a:hover { text-decoration: underline; color:rgb(117,43,177); }
+    a { text-decoration: none; color:<?php echo $config['linkcolor']?>; }
+    a:hover { text-decoration: underline; color:<?php echo $config['linkcolor']?>; }
     .page-title { font-size: 28px; padding-bottom: 18px; display: flex; align-items: center;}
     .page-title::before { content: url('<?php echo $icon ?>.png'); margin-right: 18px; }
     .description { float:right; text-align: right;  margin-right: 2%; max-width: 80%; font-size: 14px; font-style: italic; color: dimgray;}
