@@ -1,18 +1,18 @@
 <?php
 $config = include('config.php');
+$chatfile = $config['chatfile'];
+$template = "chatlog-template.json";
+$bothook = $config['bothook'];
+
 header('Content-Type: application/json');
 
-$file = "data/chatlog.json";
-$template = "chatlog-template.json";
-$bothook = "http://localhost:8001/";
-
 //Make sure the chat file exists and can be loaded
-if (!file_exists($file)){
+if (!file_exists($chatfile)){
     if (!file_exists($template)) {
         die ("{\"error\":\"chat files not found on server.\"}");
     } else {
         try {
-            copy($template, $file);
+            copy($template, $chatfile);
         }
         catch (exception $e)
         {
@@ -21,7 +21,7 @@ if (!file_exists($file)){
     }
 }
 
-if (!is_writable($file)) {
+if (!is_writable($chatfile)) {
     die ("{\"error\":\"chat file not writeable on server\"}");
 }
 
@@ -66,7 +66,7 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     $newpost->timestamp = $now;
 
     //load existing chat data
-    $chats = file_get_contents($file);
+    $chats = file_get_contents($chatfile);
     try {
         $chatData = json_decode($chats);
     }
@@ -81,14 +81,14 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
             array_shift($chatData->messages);
         }
         $newChatData = json_encode($chatData, JSON_PRETTY_PRINT);
+        $written = file_put_contents($chatfile, $newChatData);
     }
     catch (exception $e) {
         die ("{\"error\":\"chat content could not be updated: " . $e->getMessage . "\"}");
     }
-    $written = file_put_contents($file, $newChatData);
-
     //Copy to Discord
-    $discordpost = botmsg($postdata->message, $newpost->sender, $newpost->uid, $bothook."post");
+    if ($bothook != "")
+        $discordpost = botmsg($postdata->message, $newpost->sender, $newpost->uid, $bothook."post");
 }
 else {
     die ("{\"error\":\"incomplete chat payload\"}");
@@ -115,8 +115,7 @@ function botmsg($message, $user, $uid, $endpoint) {
       		$result = curl_exec($ch);
       		curl_close($ch);
       		return $result;
-    	    }
-
+    	}
 	}
 }
 

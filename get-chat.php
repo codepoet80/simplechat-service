@@ -1,18 +1,18 @@
 <?php
 $config = include('config.php');
 include('lib/emoji.php');
-header('Content-Type: application/json');
-
-$file = "data/chatlog.json";
+$chatfile = $config['chatfile'];
 $template = "chatlog-template.json";
 
+header('Content-Type: application/json');
+
 //Make sure the chat file exists and can be loaded
-if (!file_exists($file)){
+if (!file_exists($chatfile)){
     if (!file_exists($template)) {
         die ("{\"error\":\"chat file not found on server.\"}");
     } else {
         try {
-            copy($template, $file);
+            copy($template, $chatfile);
         }
         catch (exception $e)
         {
@@ -22,7 +22,7 @@ if (!file_exists($file)){
 }
 
 try {
-    $chats = file_get_contents($file);
+    $chats = file_get_contents($chatfile);
     $chatData = json_decode($chats, true);
 }
 catch (exception $e) {
