@@ -69,8 +69,11 @@ var server = webapp.listen(webPort, function() {
 });
 
 var findMessage = async function(messageId, discordId) {
-    console.log("looking for message: " + messageId + "/" + discordId);
-    var channel = client.channels.cache.get(listenChannel);
+    if (listenChannel == "*") {
+	console.log("warning: listening to all channels limits responses to only the post channel...");
+    }
+    console.log("looking for message: " + messageId + "/" + discordId + " in channel: " + listenChannel);
+    var channel = client.channels.cache.get(postChannel);
     var findMsg = await channel.messages.fetch({ limit: 100 }).then(messages => {
         for (message of messages) {
             var checkMessage = message[1];
