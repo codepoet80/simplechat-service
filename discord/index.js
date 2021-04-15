@@ -2,7 +2,7 @@ const config = require('./config.json');
 const http = require('http')
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('file-system');
+const fs = require('fs');
 var dataFile = config.simpleChatDataFile;
 
 const webapp = express();
@@ -12,7 +12,8 @@ var webPort = config.webPort;
 const Discord = require('discord.js');
 const client = new Discord.Client();
 var appId = config.discordAppId;
-var listenChannel = config.discordChannelId;
+var listenChannel = config.discordListenChannelId;
+var postChannel = config.discordPostChannelId;
 
 //Web server
 webapp.post('/post', function(req, res) {
@@ -20,7 +21,7 @@ webapp.post('/post', function(req, res) {
     var message = req.body.content;
     message = convertEmoticons(message);
     res.end("{'status':'ok'}")
-    var channel = client.channels.cache.get(listenChannel);
+    var channel = client.channels.cache.get(postChannel);
     channel.send("**" + req.body.username + "**: " + message).then(message => {
         console.log("Sent message id: " + message.id);
         //update chatlog.json to include ID from discord
@@ -34,7 +35,7 @@ webapp.post('/like', async function(req, res) {
     var messageContent = req.body.content;
     var discordId = req.body.discordId;
     res.end("{'status':'ok'}")
-    var channel = client.channels.cache.get(listenChannel);
+    var channel = client.channels.cache.get(postChannel);
     var findMsg = await findMessage(messageId, discordId);
 
     if (findMsg) {
@@ -52,7 +53,7 @@ webapp.post('/edit', async function(req, res) {
     var oldContent = req.body.oldcontent;
     var discordId = req.body.discordId;
     res.end("{'status':'ok'}")
-    var channel = client.channels.cache.get(listenChannel);
+    var channel = client.channels.cache.get(postChannel);
     var findMsg = await findMessage(messageId, discordId);
     if (findMsg) {
         var editMsg = await channel.messages.fetch(findMsg);
@@ -89,7 +90,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     console.log(msg.id + " is a new message from: " + msg.author + ", in channel:" + msg.channel);
-    if (msg.channel == listenChannel) {
+    if (msg.channel == listenChannel || listenChannel == "*") {
         var user = new Discord.User(client, msg.author);
         if (!user.bot && !user.system) {
             console.log("posting to simplechat file");
@@ -111,7 +112,10 @@ client.on('message', msg => {
                         json.messages.push(newMessage);
 			while (json.messages.length > config.maxChatLength)
 				json.messages.shift();
-                        fs.writeFile(dataFile, JSON.stringify(json, null, 4));
+                        fs.writeFile(dataFile, JSON.stringify(json, null, 4), (err) => {
+				if (err)
+					console.log("error writing file: " + err);
+			});
 			console.log("Chat log has " + json.messages.length + " messages.");
                     }
                 }
@@ -137,7 +141,10 @@ client.on('messageReactionAdd', (reaction, user) => {
                                     json.messages[m].likes++;
                             }
                         }
-                        fs.writeFile(dataFile, JSON.stringify(json, null, 4));
+			fs.writeFile(dataFile, JSON.stringify(json, null, 4), (err) => {
+                                if (err)
+                                        console.log("error writing file: " + err);
+                        });
                     }
                 }
             });
@@ -162,7 +169,10 @@ client.on('messageUpdate', (oldMsg, newMsg) => {
                                 json.messages[m].message = convertEmojis(discordMsg);
                             }
                         }
-                        fs.writeFile(dataFile, JSON.stringify(json, null, 4));
+			fs.writeFile(dataFile, JSON.stringify(json, null, 4), (err) => {
+                                if (err)
+                                        console.log("error writing file: " + err);
+                        });
                     }
                 }
             });
@@ -184,7 +194,10 @@ function discordIDToSimpleChat(uid, did) {
                     if (json.messages[m].uid == uid)
                         json.messages[m].discordId = did;
                 }
-                fs.writeFile(dataFile, JSON.stringify(json, null, 4));
+		fs.writeFile(dataFile, JSON.stringify(json, null, 4), (err) => {
+                	if (err)
+                        	console.log("error writing file: " + err);
+                });
             }
         }
     });
