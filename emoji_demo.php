@@ -21,20 +21,6 @@
 		<th>HTML to Unified</th>
 	</tr>
 <?php
-$config = include('config.php');
-
-$url = get_function_endpoint('') . "get-chat.php";
-$json = file_get_contents($url);
-$chatData = json_decode($json);
-$chats = $chatData->messages;
-$chats = array_reverse($chats);
-foreach ($chats as $chat) {
-    echo "<div class='message-group'>";
-    echo "  <p><span class='sender'>". $chat->sender . ": </span>";
-    echo "  <span class='message'>". emoji_unified_to_html($chat->message) . "</span</p>";
-    echo "  <p class='timestamp'><small>" . $chat->timestamp . " UTC</small></p>";
-    echo "</div>";
-}
 
 	$src = array(
 		array(0x2600),		# BLACK SUN WITH RAYS
