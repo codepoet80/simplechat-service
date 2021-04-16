@@ -1,8 +1,0 @@
-{
-    "webPort": 8001,
-    "discordAppId": "Get this token from the Bot section of your App Registration in Discord",
-    "discordListenChannelId": "Use * for all, for a specific channel you basically have to watch incoming messages to find the channel ID you want",
-    "discordPostChannelId": "The channel the bot will post on",
-    "simpleChatDataFile": "/var/www/chat/data/chatlog.json",
-    "maxChatLength": 100
-}
