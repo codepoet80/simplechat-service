@@ -21,6 +21,24 @@ if (!file_exists($chatfile)){
     }
 }
 
+//Make sure they sent a client id
+$request_headers = getallheaders();
+if (array_key_exists('Client-Id', $request_headers) && in_array($request_headers['Client-Id'], $config['clientids'])) {
+} else {
+    echo $request_headers['Client-Id'];
+    die ('
+        {
+            "messages": [{
+                "uid": "999999",
+                "sender": "Service Messenger",
+                "message": "Your client or app is misconfigured or out-of-date and needs to be updated before you can send or receive messages. Please ensure you install the latest app, or that your client code has the correct Client ID (on webOS, this is the secrets.js file in the root of your app folder.)",
+                "timestamp": "2021-04-16 16:16:42",
+                "senderkey": "0000000"
+            }]
+        }
+    ');
+}
+
 try {
     $chats = file_get_contents($chatfile);
     $chatData = json_decode($chats, true);

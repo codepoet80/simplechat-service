@@ -1,4 +1,8 @@
 <?php
+    if (file_exists("index.html")) {
+        header("Location: index.html");
+        die();
+    }
     $config = include('config.php');
     include('lib/emoji.php');
     $icon = "icon";
@@ -44,10 +48,9 @@ echo $config['welcomemessage'];
 <div class="message-area">
 <?php
 $url = get_function_endpoint('') . "get-chat.php";
-
-$json = file_get_contents($url);
-$chatData = json_decode($json);
+$chatData = json_decode(get_chat($url, $config['clientids'][0]));
 $chats = $chatData->messages;
+
 $chats = array_reverse($chats);
 foreach ($chats as $chat) {
     echo "<div class='message-group'>";
@@ -68,6 +71,27 @@ function get_function_endpoint($functionName) {
     $page = basename($_SERVER['PHP_SELF']);
     $url = str_replace($page, $functionName, $url);
     return $url;
+}
+
+function get_chat($endpoint, $clientid) {
+	if ($endpoint != "") {
+   	    $ch = curl_init($endpoint);
+
+	    if(isset($ch)) {
+            $customHeaders = array(
+                'Content-Type:application/json',
+                'Client-Id:' . $clientid,
+            );
+
+     		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+		    curl_setopt($ch, CURLOPT_HTTPHEADER, $customHeaders);
+      		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+      		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      		$result = curl_exec($ch);
+      		curl_close($ch);
+      		return $result;
+    	}
+	}
 }
 ?>
 </div>
