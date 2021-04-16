@@ -12,13 +12,13 @@
 <html>
 <head>
 <title><?php echo $config['title']?></title>
-<style>
-    a { text-decoration: none; color:<?php echo $config['linkcolor']?>; }
-    a:hover { text-decoration: underline; color:<?php echo $config['linkcolor']?>; }
-    .page-title::before { content: url('<?php echo $icon ?>.png'); margin-right: 18px; }
-</style>
 <link rel="shortcut icon" href="<?php echo $icon ?>.ico">
 <link rel="stylesheet" href="style.css">
+<?php
+    if (file_exists($config['customcss'])) {
+        echo '<link rel="stylesheet" href="' . $config['customcss'] .'">';
+    }
+?>
 <link href="lib/emoji.css?cb=<?php echo time(); ?>" rel="stylesheet" type="text/css" />
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1" />
 <link rel="icon" href="<?php echo $icon ?>.png" type="image/png">

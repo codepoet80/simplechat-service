@@ -6,7 +6,7 @@ return array(
     'title' => 'Your Chat!',
     'alticon' => '',	//leave empty to use the default
     'welcomemessage' => 'Describe the purpose of your chat for visitors! To hide from web viewers, copy index.off to index.html',
-    'linkcolor' => 'rgb(117,43,177)',
+    'customcss' => '',  //eg: custom/style.css
     'allowedhtml' => '<p><b><i><u><br><ul><li><font>',
     'chatfile' => 'data/chatlog.json',
     'maxchatlength' => 100,
