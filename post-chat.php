@@ -3,6 +3,7 @@ $config = include('config.php');
 $chatfile = $config['chatfile'];
 $template = "chatlog-template.json";
 $bothook = $config['bothook'];
+include('common.php');
 
 header('Content-Type: application/json');
 
@@ -26,7 +27,7 @@ if (!is_writable($chatfile)) {
 }
 
 //Make sure they sent a client id
-$request_headers = getallheaders();
+$request_headers = get_request_headers();
 if (array_key_exists('Client-Id', $request_headers) && in_array($request_headers['Client-Id'], $config['clientids'])) {
     //TODO: some kind of allowed client config file
 } else {

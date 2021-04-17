@@ -2,6 +2,7 @@
 $config = include('config.php');
 $chatfile = $config['chatfile'];
 $bothook = $config['bothook'];
+include('common.php');
 $found = false;
 
 header('Content-Type: application/json');
@@ -16,7 +17,7 @@ if (!is_writable($chatfile)) {
 }
 
 //Make sure they sent a client id
-$request_headers = getallheaders();
+$request_headers = get_request_headers();
 if (array_key_exists('Client-Id', $request_headers) && in_array($request_headers['Client-Id'], $config['clientids'])) {
 } else {
     die ("{\"error\":\"no allowed Client-Id in POST headers\"}");
