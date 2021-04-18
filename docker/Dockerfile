@@ -30,6 +30,6 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 
 EXPOSE 80
 
-RUN wget https://raw.githubusercontent.com/codepoet/simplechat-service/main/docker/run.sh -O /run.sh
+RUN wget https://raw.githubusercontent.com/codepoet80/simplechat-service/main/docker/run.sh -O /run.sh
 RUN chmod a+rx /run.sh
 CMD ["/bin/bash", "/run.sh"]
