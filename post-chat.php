@@ -116,7 +116,7 @@ function botmsg($message, $user, $uid, $endpoint) {
       		$result = curl_exec($ch);
       		curl_close($ch);
       		return $result;
-    	}
+    	    }
 	}
 }
 
