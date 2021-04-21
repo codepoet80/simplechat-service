@@ -26,7 +26,6 @@ if (!file_exists($chatfile)){
 $request_headers = get_request_headers();
 if (array_key_exists('Client-Id', $request_headers) && in_array($request_headers['Client-Id'], $config['clientids'])) {
 } else {
-    echo $request_headers['Client-Id'];
     die ('
         {
             "messages": [{
