@@ -11,6 +11,11 @@
     align-items: center;
 }
 
+.page-title::before {
+    content: url('icon.png');
+    margin-right: 18px;
+}
+
 .description {
     float: right;
     text-align: right;
