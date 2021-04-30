@@ -28,7 +28,7 @@ if (!is_writable($chatfile)) {
 //Make sure they sent a client id
 $request_headers = getallheaders();
 if (array_key_exists('Client-Id', $request_headers) && in_array($request_headers['Client-Id'], $config['clientids'])) {
-    //TODO: some kind of allowed client config file
+    //nothing to do
 } else {
     die ("{\"error\":\"no allowed Client-Id in POST headers\"}");
 }

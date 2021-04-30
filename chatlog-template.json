@@ -2,7 +2,7 @@
     "messages": [{
         "uid": "999999",
         "sender": "WelcomeBot",
-        "message": "Welcome to SimpleChat!",
+        "message": "🤖 Welcome to SimpleChat!",
         "timestamp": "2021-01-23 16:16:42",
         "senderkey": "0000000"
     }]
