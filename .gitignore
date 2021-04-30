@@ -7,3 +7,4 @@ data/chatlog.json
 .htaccess
 index.html
 custom/
+docker/
