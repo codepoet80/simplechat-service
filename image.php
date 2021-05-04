@@ -20,7 +20,7 @@ function is_valid_base64($str){
 <head>
 	<title>Image Proxy</title>
 	<style>
-		body { background-color: black; color:white; }
+		body { background-color: white; color:black; }
 	</style>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
