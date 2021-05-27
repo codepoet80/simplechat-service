@@ -66,9 +66,11 @@ function convert_message_to_public_schema($data) {
     $msg->sender = $data['sender'];
     $msg->message = emoji_unified_to_html($data['message']);
     $msg->timestamp = $data['timestamp'];
-    $msg->likes = $data['likes'];
-    $msg->edited = $data['edited'];
-    if($data['postedFrom']) {
+    if (isset($data['likes']))
+	    $msg->likes = $data['likes'];
+    if (isset($data['edited']))
+	    $msg->edited = $data['edited'];
+    if (isset($data['postedFrom'])) {
 	$msg->postedFrom = $data['postedFrom'];
     }
     return $msg;
