@@ -34,9 +34,9 @@ if (!file_exists($image)) {
 //Send the right headers
 $info = getimagesize($image);
 header("Content-Type: " . $info['mime']);
-header("Content-Length: " . filesize($path));
+header("Content-Length: " . filesize($image));
 //Dump the file and stop the script
-$fp = fopen($path, 'r');
+$fp = fopen($image, 'r');
 fpassthru($fp);
 exit;
 
