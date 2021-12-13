@@ -70,9 +70,10 @@ function convert_message_to_public_schema($data) {
 	    $msg->likes = $data['likes'];
     if (isset($data['edited']))
 	    $msg->edited = $data['edited'];
-    if (isset($data['postedFrom'])) {
+    if (isset($data['postedFrom']))
 	    $msg->postedFrom = $data['postedFrom'];
-    }
+    if (isset($data['attachments']))
+        $msg->attachments = $data['attachments'];
     return $msg;
 }
 ?>
