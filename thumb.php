@@ -50,7 +50,6 @@ if (!$found) {
     gracefuldeath_httpcode(410);
 }
 
-
 //Function to resize common image formats
 //  Found on https://stackoverflow.com/questions/13596794/resize-images-with-php-support-png-jpg
 function resize_img($newWidth, $targetFile, $originalFile) {
