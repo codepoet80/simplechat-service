@@ -30,8 +30,8 @@ $cacheID = "thumb-" . $image;
 $path = $config['attachmentcache'];
 
 //Fetch and cache the file if its not already cached
-$path = $path . $cacheID;
 $image = $path . $image;
+$path = $path . $cacheID;
 
 if (!file_exists($path)) {
     resize_img($imgSize, $path, $image);
