@@ -73,18 +73,6 @@ function convert_message_to_public_schema($data) {
     if (isset($data['postedFrom'])) {
 	    $msg->postedFrom = $data['postedFrom'];
     }
-    if (isset($data['attachments'])) {
-        $msg->attachments = convert_attachment_data($data['attachments']);
-    }
     return $msg;
 }
-
-function convert_attachment_data($attachments) {
-    $newattachments = [];
-    foreach($attachments as $attachment) {
-         $attachment['url'] = "attachment.php?" . $attachment['filename'] . "&type=" . $attachment['extension'];
-         array_push($newattachments, $attachment);
-    }
-    return $newattachments;
- }
 ?>
