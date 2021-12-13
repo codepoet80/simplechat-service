@@ -82,7 +82,7 @@ function convert_message_to_public_schema($data) {
 function convert_attachment_data($attachments) {
     $newattachments = [];
     foreach($attachments as $attachment) {
-         $attachment['url'] = "attachment.php?" . $attachment['filename'];
+         $attachment['url'] = "attachment.php?" . $attachment['filename'] . "&type=" . $attachment['extension'];
          array_push($newattachments, $attachment);
     }
     return $newattachments;
