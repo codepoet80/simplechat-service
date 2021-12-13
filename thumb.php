@@ -31,6 +31,8 @@ $path = $config['attachmentcache'];
 
 //Fetch and cache the file if its not already cached
 $path = $path . $cacheID;
+echo $path;
+die();
 if (!file_exists($path)) {
     resize_img($imgSize, $path, $image);
 }
