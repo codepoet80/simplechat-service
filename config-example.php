@@ -11,6 +11,7 @@ return array(
     'chatfile' => 'data/chatlog.json',  //path where chatlog will be created/read
     'maxchatlength' => 100, //how many messages the chatlog should store before rolling over
     'bothook' => '', //eg: http://localhost:8001/ -- must end with / Leave empty if you don't want to use the discord bot (https://github.com/codepoet80/simplechat-discordbot)
-    'imgurclientid' => ''   //only required for imgur proxy
+    'imgurclientid' => '',   //only required for imgur proxy
+    'attachmentcache' => '' //absolute path to the writeable folder that will store attachments, should be shared with discord bot (if used)
 );
 ?>
