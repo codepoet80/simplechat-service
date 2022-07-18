@@ -66,21 +66,19 @@ function get_function_endpoint($functionName) {
 function get_chat($endpoint, $clientid) {
 	if ($endpoint != "") {
    	    $ch = curl_init($endpoint);
-
-	    if(isset($ch)) {
-            $customHeaders = array(
-                'Content-Type:application/json',
-                'Client-Id:' . $clientid,
-            );
+	    	if(isset($ch)) {
+           	 $customHeaders = array(
+                	'Content-Type:application/json',
+                	'Client-Id:' . $clientid,
+            	);
 
      		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
 		    curl_setopt($ch, CURLOPT_HTTPHEADER, $customHeaders);
-      		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
       		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
       		$result = curl_exec($ch);
       		curl_close($ch);
       		return $result;
-    	}
+    		}
 	}
 }
 ?>
