@@ -83,6 +83,6 @@ function get_chat($endpoint, $clientid) {
 }
 ?>
 </div>
-<div class='footer'>Provided by <a href="http://www.webosarchive.com">webOS Archive</a> | Copyright 2021 <a href="http://www.jonandnic.com">Jon Wise</a> | Open Source with a MIT License: <a href="https://github.com/codepoet80/simplechat-service">Git Repo</a></footer>
+<div class='footer'>Provided by <a href="http://www.webosarchive.org">webOS Archive</a> | Copyright 2021 <a href="http://www.github.com/codepoet80">Jon W</a> | Open Source with a MIT License: <a href="https://github.com/codepoet80/simplechat-service">Git Repo</a></footer>
 </body>
 </html>
