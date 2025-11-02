@@ -30,11 +30,12 @@ function is_valid_base64($str){
 <body>
 <?php
 $source = $_SERVER['QUERY_STRING'];
-if (is_valid_base64($source))
-	$isource = $source;
-else
-	$isource = base64url_encode($source);
-echo '<img src="i.php?'. $isource . '">';
+if (is_valid_base64($source)) {
+        $isource = $source;
+        echo '<img src="'. base64_decode($source) . '">';
+} else {
+        die("could not parse image link");
+}
 ?>
 </body>
 </html>
