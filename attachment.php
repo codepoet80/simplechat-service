@@ -24,8 +24,24 @@ if (!is_dir($config['attachmentcache'])) {
 $found = true;
 $path = $config['attachmentcache'];
 
+// SECURITY: Prevent path traversal attacks
+// Strip any directory components and only allow the filename
+$image = basename($image);
+
+// Additional validation: reject if the filename contains suspicious patterns
+if (preg_match('/\.\./', $image) || strpos($image, '/') !== false || strpos($image, '\\') !== false) {
+    gracefuldeath_httpcode(403);
+}
+
 //Fetch the file
 $image = $path . $image;
+
+// SECURITY: Verify the resolved path is still within the attachmentcache directory
+$realPath = realpath($image);
+$realCachePath = realpath($config['attachmentcache']);
+if ($realPath === false || strpos($realPath, $realCachePath) !== 0) {
+    gracefuldeath_httpcode(403);
+}
 
 if (!file_exists($image)) {
     gracefuldeath_httpcode(410);

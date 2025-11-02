@@ -8,7 +8,7 @@ include('common.php');
 $image = null;
 $imgSize = 128;
 if (isset($_GET["size"]))
-    $imgSize = $_GET["size"];
+    $imgSize = intval($_GET["size"]); // SECURITY: Validate size is an integer
 if (isset($_GET['image']) && $_GET['image'] != "") {
     $image = $_GET['image'];
 } else { //Accept a blanket query
@@ -23,8 +23,23 @@ if (!is_dir($config['attachmentcache'])) {
     gracefuldeath_httpcode(417);
 }
 
+// SECURITY: Validate size parameter to prevent resource exhaustion
+if ($imgSize < 1 || $imgSize > 2048) {
+    gracefuldeath_httpcode(400);
+}
+
 //Make sure the file exists and can be loaded
 $found = true;
+
+// SECURITY: Prevent path traversal attacks
+// Strip any directory components and only allow the filename
+$image = basename($image);
+
+// Additional validation: reject if the filename contains suspicious patterns
+if (preg_match('/\.\./', $image) || strpos($image, '/') !== false || strpos($image, '\\') !== false) {
+    gracefuldeath_httpcode(403);
+}
+
 //Prepare the cache name
 $cacheID = "thumb-" . $image;
 $path = $config['attachmentcache'];
@@ -32,6 +47,13 @@ $path = $config['attachmentcache'];
 //Fetch and cache the file if its not already cached
 $image = $path . $image;
 $path = $path . $cacheID;
+
+// SECURITY: Verify the resolved paths are still within the attachmentcache directory
+$realImagePath = realpath(dirname($image)) . '/' . basename($image);
+$realCachePath = realpath($config['attachmentcache']);
+if (strpos(realpath(dirname($image)), $realCachePath) !== 0) {
+    gracefuldeath_httpcode(403);
+}
 
 if (!file_exists($path)) {
     resize_img($imgSize, $path, $image);
