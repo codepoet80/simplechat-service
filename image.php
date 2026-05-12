@@ -31,8 +31,12 @@ function is_valid_base64($str){
 <?php
 $source = $_SERVER['QUERY_STRING'];
 if (is_valid_base64($source)) {
-        $isource = $source;
-        echo '<img src="'. base64_decode($source) . '">';
+        $decoded = base64_decode($source);
+        // SECURITY: Only allow http/https URLs to prevent javascript: URI injection
+        if (!preg_match('/^https?:\/\//i', $decoded)) {
+            die("invalid image URL");
+        }
+        echo '<img src="'. htmlspecialchars($decoded, ENT_QUOTES, 'UTF-8') . '">';
 } else {
         die("could not parse image link");
 }

@@ -20,6 +20,10 @@ if (isset($_SERVER['QUERY_STRING'])) {
     }
     $urlParts = explode("/", $url);
     $url = end($urlParts);
+    if (!preg_match('/^[a-zA-Z0-9]+$/', $url)) {
+        http_response_code(400);
+        die("invalid album id");
+    }
     $url = "https://api.imgur.com/3/album/" . $url;
 
     $ch = curl_init();

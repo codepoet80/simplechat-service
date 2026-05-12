@@ -33,7 +33,7 @@ function get_image_mime_type($image_path)
 
 function base64url_decode($data, $strict = false)
 {
-  // Convert Base64URL to Base64 by replacing “-” with “+” and “_” with “/”
+  // Convert Base64URL to Base64 by replacing "-" with "+" and "_" with "/"
   $b64 = strtr($data, '-_', '+/');
 
   // Decode Base64 string and return the original data
@@ -42,7 +42,19 @@ function base64url_decode($data, $strict = false)
 
 $source = base64url_decode($_SERVER['QUERY_STRING']);
 
-header('Content-Type '.get_image_mime_type($source));
+// SECURITY: Only allow http/https URLs, not local filesystem paths
+if (!$source || !preg_match('/^https?:\/\//i', $source)) {
+    http_response_code(400);
+    exit;
+}
+
+$mime = get_image_mime_type($source);
+if (!$mime) {
+    http_response_code(415);
+    exit;
+}
+
+header('Content-Type: ' . $mime);
 $fp = fopen($source, 'rb');
 fpassthru($fp);
 ?>

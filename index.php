@@ -44,9 +44,9 @@ $chats = $chatData->messages;
 $chats = array_reverse($chats);
 foreach ($chats as $chat) {
     echo "<div class='message-group'>";
-    echo "  <p><span class='sender'>". $chat->sender . ": </span>";
-    echo "  <span class='message'>". emoji_unified_to_html($chat->message) . "</span</p>";
-    echo "  <p class='timestamp'><small>" . $chat->timestamp . " UTC</small></p>";
+    echo "  <p><span class='sender'>". htmlspecialchars($chat->sender, ENT_QUOTES, 'UTF-8') . ": </span>";
+    echo "  <span class='message'>". emoji_unified_to_html(htmlspecialchars($chat->message, ENT_QUOTES, 'UTF-8')) . "</span></p>";
+    echo "  <p class='timestamp'><small>" . htmlspecialchars($chat->timestamp, ENT_QUOTES, 'UTF-8') . " UTC</small></p>";
     echo "</div>";
 }
 

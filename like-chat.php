@@ -37,11 +37,9 @@ if (isset($postdata->uid) && $postdata->uid != "" && isset($postdata->like) && $
 
     //load existing chat data
     $chats = file_get_contents($chatfile);
-    try {
-        $chatData = json_decode($chats);
-    }
-    catch (exception $e) {
-        die ("{\"error\":\"chat content could not be loaded: " . $e->getMessage . "\"}");
+    $chatData = json_decode($chats);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        die ("{\"error\":\"chat content could not be loaded: " . json_last_error_msg() . "\"}");
     }
 
     foreach($chatData->messages as $chat)
@@ -68,10 +66,10 @@ if (isset($postdata->uid) && $postdata->uid != "" && isset($postdata->like) && $
     }
     try {
         $newChatData = json_encode($chatData, JSON_PRETTY_PRINT);
-        $written = file_put_contents($chatfile, $newChatData);
+        $written = file_put_contents($chatfile, $newChatData, LOCK_EX);
     }
     catch (exception $e) {
-        die ("{\"error\":\"chat content could not be updated: " . $e->getMessage . "\"}");
+        die ("{\"error\":\"chat content could not be updated: " . $e->getMessage() . "\"}");
     }
     //Copy to Discord
     if ($bothook != "")

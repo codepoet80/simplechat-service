@@ -55,6 +55,10 @@ if (strpos(realpath(dirname($image)), $realCachePath) !== 0) {
     gracefuldeath_httpcode(403);
 }
 
+if (!file_exists($image)) {
+    gracefuldeath_httpcode(410);
+}
+
 if (!file_exists($path)) {
     resize_img($imgSize, $path, $image);
 }
@@ -67,10 +71,6 @@ header("Content-Length: " . filesize($path));
 $fp = fopen($path, 'r');
 fpassthru($fp);
 exit;
-
-if (!$found) {
-    gracefuldeath_httpcode(410);
-}
 
 //Function to resize common image formats
 //  Found on https://stackoverflow.com/questions/13596794/resize-images-with-php-support-png-jpg
@@ -120,6 +120,7 @@ function resize_img($newWidth, $targetFile, $originalFile) {
 }
 
 function gracefuldeath_httpcode($code) {
-    header($_SERVER["SERVER_PROTOCOL"] . $code);
+    header($_SERVER["SERVER_PROTOCOL"] . " " . $code);
+    exit;
 }
 ?>

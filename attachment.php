@@ -57,6 +57,7 @@ fpassthru($fp);
 exit;
 
 function gracefuldeath_httpcode($code) {
-    header($_SERVER["SERVER_PROTOCOL"] . $code);
+    header($_SERVER["SERVER_PROTOCOL"] . " " . $code);
+    exit;
 }
 ?>
