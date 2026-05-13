@@ -43,7 +43,10 @@ catch (Exception $e) {
     die ("{\"error\":\"invalid chat payload: " . $e->getMessage() . "\"}");
 }
 
-if (isset($postdata->message) && $postdata->message != "" && isset($postdata->sender) && $postdata->sender != "") {
+$hasMessage = isset($postdata->message) && $postdata->message != "";
+$hasAttachments = isset($postdata->attachments) && is_array($postdata->attachments) && count($postdata->attachments) > 0;
+
+if (($hasMessage || $hasAttachments) && isset($postdata->sender) && $postdata->sender != "") {
 
     //assign ids (one public, one for the sender only)
     $newid = uniqid();
@@ -59,12 +62,14 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     $newpost->senderKey = $senderKey;
     $newpost->sender = strip_tags($postdata->sender, $config['allowedhtml']);
     //handle special webOS emoticons
-    $newpost->message = $postdata->message;
-    $newpost->message = str_replace("<3", "&lt;3", $postdata->message);
-    $newpost->message = str_replace(">:-)", "&gt;:-)", $postdata->message);
-    $newpost->message = str_replace(">:(", "&gt;:(", $postdata->message);
+    $newpost->message = $hasMessage ? $postdata->message : '';
+    $newpost->message = str_replace("<3", "&lt;3", $newpost->message);
+    $newpost->message = str_replace(">:-)", "&gt;:-)", $newpost->message);
+    $newpost->message = str_replace(">:(", "&gt;:(", $newpost->message);
     $newpost->message = strip_tags($newpost->message, $config['allowedhtml']);
     $newpost->timestamp = $now;
+    if ($hasAttachments)
+        $newpost->attachments = $postdata->attachments;
 
     //load existing chat data
     $chats = file_get_contents($chatfile);
@@ -87,7 +92,7 @@ if (isset($postdata->message) && $postdata->message != "" && isset($postdata->se
     }
     //Copy to Discord
     if ($bothook != "")
-        $discordpost = botmsg($postdata->message, $newpost->sender, $newpost->uid, $bothook."post");
+        $discordpost = botmsg($newpost->message, $newpost->sender, $newpost->uid, $bothook."post", $hasAttachments ? $postdata->attachments : null);
 }
 else {
     die ("{\"error\":\"incomplete chat payload\"}");
@@ -101,10 +106,12 @@ echo "{\"posted\":\"" . $newid . "\", \"senderKey\":\"" . $senderKey . "\"}";
 
 exit();
 
-function botmsg($message, $user, $uid, $endpoint) {
+function botmsg($message, $user, $uid, $endpoint, $attachments = null) {
 	if ($endpoint != "") {
    	    $ch = curl_init($endpoint);
 	    $data = array('username'=>$user, 'content'=>$message, 'uid'=>$uid);
+	    if ($attachments !== null)
+	        $data['attachments'] = $attachments;
 
 	    if(isset($ch)) {
      		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
